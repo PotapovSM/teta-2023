@@ -1,0 +1,21 @@
+# ETCD
+[etcd_cluster]
+10.0.10.2 ansible_host=77.105.185.176
+10.0.10.3 ansible_host=77.105.185.177
+10.0.10.4 ansible_host=77.105.185.180
+
+# HAProxy
+[balancers]
+10.0.10.5 ansible_host=77.105.185.181 hostname=pg-lb-01
+
+# PostgreSQL nodes
+[master]
+10.0.10.2 ansible_host=77.105.185.176 hostname=pgnode01 postgresql_exists=false
+
+[replica]
+10.0.10.3 ansible_host=77.105.185.177 hostname=pgnode02 postgresql_exists=false
+10.0.10.4 ansible_host=77.105.185.180 hostname=pgnode03 postgresql_exists=false
+
+[postgres_cluster:children]
+master
+replica

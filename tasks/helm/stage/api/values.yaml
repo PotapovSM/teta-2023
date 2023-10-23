@@ -1,0 +1,73 @@
+# Default values for api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+app:
+  enabled: true
+  settings:
+    server: 77.105.185.181
+    port: 5000
+    database: 'weather'
+    user_id: 'api_usr'
+    password: '<StrongPassword in Ansible VAULT>'
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/ldest/sre-course/api
+  pullPolicy: IfNotPresent
+  tag: "c4f3862"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  enabled: true
+  type: ClusterIP
+  port: 80
+
+# TODO
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: teta-02.local
+      paths:
+      - path: /
+        backend:
+          serviceName: api
+          servicePort: 80
+  tls: []
+
+resources:
+  limits:
+    cpu: 1
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

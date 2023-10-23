@@ -1,0 +1,36 @@
+---
+
+- hosts: all
+  become: yes
+  tasks:
+    - apt:
+        name: qemu-guest-agent
+        update_cache: yes
+    - reboot:
+        reboot_timeout: 3600
+
+- hosts: all
+  become: yes
+  tags:
+    - clean_up
+  tasks:
+    - apt:
+        name: postgresql*
+        state: absent
+    - name: Recursively remove directory
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - '/opt/patroni'
+        - '/etc/patroni'
+        - '/opt/etcd'
+        - '/etc/etcd'
+        - '/var/lib/etcd'
+        - '/etc/postgresql'
+        - '/var/lib/postgresql'
+        - '/var/cache/postgresql'
+        - '/etc/systemd/system/etcd.service'
+        - '/tmp/pgpass0'
+    - ansible.builtin.systemd:
+        daemon_reload: true
