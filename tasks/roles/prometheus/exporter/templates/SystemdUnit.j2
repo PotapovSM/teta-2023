@@ -1,0 +1,26 @@
+[Unit]
+Description={{ type }}
+
+[Service]
+User=prometheus
+Group=prometheus
+{% if  type ==  'blackbox_exporter' %}
+ExecStart=/opt/{{ type }}/{{ type }} --config.file=/opt/{{ type }}/config/{{ type }}.yml
+{% elif  type ==  'postgres_exporter' %}
+ExecStart=/opt/{{ type }}/{{ type }} --config.file=/opt/{{ type }}/config/{{ type }}.yml
+{% elif  type ==  'patroni_exporter' %}
+EnvironmentFile=/opt/{{ type }}/config/{{ type }}
+ExecStart=/opt/{{ type }}/patroni_exporter.py \
+          --bind ${BIND} \
+          --port ${PORT} \
+          --address-family ${ADDRESS_FAMILY} \
+          --patroni-url ${PATRONI_URL} \
+          --timeout ${TIMEOUT} \
+          --requests-verify ${VERIFY} \
+          ${DEBUG}
+{% else %}
+ExecStart=/opt/{{ type }}/{{ type }}
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target

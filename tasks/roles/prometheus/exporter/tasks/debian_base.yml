@@ -1,0 +1,62 @@
+---
+- name: Add the user 'prometheus'
+  user:
+    name: prometheus
+
+- name: "Download file app {{ url_exporter[type] }}"
+  ansible.builtin.unarchive:
+    src: "{{ url_exporter[type] }}"
+    dest: "/usr/local/src"
+    owner: prometheus
+    group: prometheus
+    remote_src: yes
+
+- name: "Create a symbolic link for {{ type }}"
+  file:
+    src: "/usr/local/src/{{ type }}-{{ vars[type + '_version'] }}.linux-amd64"
+    dest: "/opt/{{ type }}"
+    state: link
+  when: type != 'patroni_exporter'
+
+- block:
+  - name: "Create a symbolic link for / patroni-exporter"
+    file:
+      src: "/usr/local/src/{{ type | replace('_', '-') }}-{{ vars[type + '_version'] }}"
+      dest: "/opt/{{ type }}"
+      state: link
+  - apt:
+      name:
+        - "python3-pip"
+        - "python-is-python3"
+      state: "present"
+  - ansible.builtin.pip:
+      requirements: "/opt/{{ type }}/requirements.txt"
+  when: type == 'patroni_exporter'
+
+- name: "Create a file systemd unit for {{ type }}"
+  template:
+    src: SystemdUnit.j2
+    dest: "/etc/systemd/system/{{ type }}.service"
+  notify: "restart_service_{{ type }}"
+
+- name: "Create a directory if it does not exist for {{ type }}"
+  file:
+    path: "/opt/{{ type }}/config"
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: '0755'
+
+- name: "Create a config file for {{ type }}"
+  template:
+    src: "{{ type }}.j2"
+    dest: "/opt/{{ type }}/config/{{ type }}.yml"
+  notify: "restart_service_{{ type }}"
+  when: type != 'patroni_exporter'
+
+- name: "Create a config file for {{ type }}"
+  template:
+    src: "{{ type }}.j2"
+    dest: "/opt/{{ type }}/config/{{ type }}"
+  notify: "restart_service_{{ type }}"
+  when: type == 'patroni_exporter'

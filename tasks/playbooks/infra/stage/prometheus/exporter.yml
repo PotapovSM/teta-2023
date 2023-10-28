@@ -1,0 +1,36 @@
+---
+
+- name: Bootstrap prometheus exporter`s / postgres_exporter
+  hosts: postgres_exporter
+  become: true
+  roles:
+    - role: prometheus/exporter
+      type: postgres_exporter
+
+- name: Bootstrap prometheus exporter`s / patroni_exporter
+  hosts: patroni_exporter
+  become: true
+  roles:
+    - role: prometheus/exporter
+      type: patroni_exporter
+
+- name: Bootstrap prometheus exporter`s / blackbox_exporter
+  hosts: blackbox_exporter
+  become: true
+  roles:
+    - role: prometheus/exporter
+      type: blackbox_exporter
+
+- name: Bootstrap prometheus exporter`s / node_exporter
+  hosts: node_exporter
+  become: true
+  roles:
+    - role: prometheus/exporter
+      type: node_exporter
+
+- name: Bootstrap prometheus exporter`s / monitoring
+  hosts: monitoring
+  become: true
+  roles:
+    - role: prometheus/exporter
+      type: monitoring

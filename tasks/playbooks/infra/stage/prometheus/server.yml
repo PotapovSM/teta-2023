@@ -1,0 +1,7 @@
+---
+
+- name: Bootstrap prometheus server
+  hosts: prometheus
+  become: true
+  roles:
+    - prometheus/server

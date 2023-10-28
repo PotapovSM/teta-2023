@@ -1,0 +1,5 @@
+---
+# tasks file for prometheus
+
+- import_tasks: debian_base.yml
+  when: ansible_facts['os_family'] == 'Debian'

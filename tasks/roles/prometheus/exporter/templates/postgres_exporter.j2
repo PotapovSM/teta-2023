@@ -1,0 +1,9 @@
+auth_modules:
+  api_teta:
+    type: userpass
+    userpass:
+      username: '{{ patroni_superuser_username }}'
+      password: '{{ patroni_superuser_password }}'
+    options:
+      # options become key=value parameters of the DSN
+      sslmode: disable

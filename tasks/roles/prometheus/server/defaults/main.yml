@@ -1,0 +1,9 @@
+---
+# defaults file for prometheus
+
+prometheus_version: "2.47.2"
+prometheus_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+app_name: "prometheus"
+base_app_dir: "/opt/{{ app_name }}"
+update: 'No'
+install: 'No'

@@ -1,0 +1,12 @@
+---
+# defaults file for exporter
+
+postgres_exporter_version: "0.14.0"
+patroni_exporter_version: "0.0.2"
+blackbox_exporter_version: "0.24.0"
+node_exporter_version: "1.6.1"
+url_exporter:
+  postgres_exporter: "https://github.com/prometheus-community/postgres_exporter/releases/download/v{{ postgres_exporter_version }}/postgres_exporter-{{ postgres_exporter_version }}.linux-amd64.tar.gz"
+  blackbox_exporter: "https://github.com/prometheus/blackbox_exporter/releases/download/v{{ blackbox_exporter_version }}/blackbox_exporter-{{ blackbox_exporter_version }}.linux-amd64.tar.gz"
+  node_exporter: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+  patroni_exporter: "https://github.com/Showmax/patroni-exporter/archive/refs/tags/{{ patroni_exporter_version }}.zip"
